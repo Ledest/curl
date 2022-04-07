@@ -257,6 +257,8 @@ struct ssl_primary_config {
   struct curl_blob *ca_info_blob;
   struct curl_blob *issuercert_blob;
   char *curves;          /* list of curves to use */
+  char *sig_hash_algs;   /* List of signature hash algorithms to use */
+  char *cert_compression;  /* List of certificate compression algorithms. */
   BIT(verifypeer);       /* set TRUE if this is desired */
   BIT(verifyhost);       /* set TRUE if CN/SAN must match hostname */
   BIT(verifystatus);     /* set TRUE if certificate status must be checked */
@@ -517,6 +519,8 @@ struct ConnectBits {
   BIT(tcp_fastopen); /* use TCP Fast Open */
   BIT(tls_enable_npn);  /* TLS NPN extension? */
   BIT(tls_enable_alpn); /* TLS ALPN extension? */
+  BIT(tls_enable_alps); /* TLS ALPS extension? */
+  BIT(tls_enable_ticket); /* TLS session ticket extension? */
   BIT(connect_only);
 #ifndef CURL_DISABLE_DOH
   BIT(doh);
@@ -1421,6 +1425,19 @@ struct UrlState {
   CURLcode hresult; /* used to pass return codes back from hyper callbacks */
 #endif
 
+  /*
+   * curl-impersonate:
+   * List of "base" headers set by CURLOPT_HTTPBASEHEADER.
+   */
+  struct curl_slist *base_headers;
+  /*
+   * curl-impersonate:
+   * Dynamically-constructed list of HTTP headers.
+   * This list is a merge of the default HTTP headers needed to impersonate a
+   * browser, together with any user-supplied headers.
+   */
+  struct curl_slist *merged_headers;
+
   /* Dynamically allocated strings, MUST be freed before this struct is
      killed. */
   struct dynamically_allocated_data {
@@ -1579,6 +1596,9 @@ enum dupstring {
   STRING_DNS_LOCAL_IP4,
   STRING_DNS_LOCAL_IP6,
   STRING_SSL_EC_CURVES,
+  STRING_SSL_SIG_HASH_ALGS,
+  STRING_SSL_CERT_COMPRESSION,
+  STRING_HTTP2_PSEUDO_HEADERS_ORDER,
 
   /* -- end of null-terminated strings -- */
 
@@ -1849,6 +1869,8 @@ struct UserDefined {
   BIT(tcp_fastopen);   /* use TCP Fast Open */
   BIT(ssl_enable_npn); /* TLS NPN extension? */
   BIT(ssl_enable_alpn);/* TLS ALPN extension? */
+  BIT(ssl_enable_alps);/* TLS ALPS extension? */
+  BIT(ssl_enable_ticket); /* TLS session ticket extension */
   BIT(path_as_is);     /* allow dotdots? */
   BIT(pipewait);       /* wait for multiplex status before starting a new
                           connection */

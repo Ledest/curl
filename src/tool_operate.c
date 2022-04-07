@@ -1432,6 +1432,11 @@ static CURLcode single_transfer(struct GlobalConfig *global,
             return result;
           }
 
+          if(config->http2_pseudo_headers_order)
+            my_setopt_str(curl,
+                          CURLOPT_HTTP2_PSEUDO_HEADERS_ORDER,
+                          config->http2_pseudo_headers_order);
+
         } /* (built_in_protos & CURLPROTO_HTTP) */
 
         my_setopt_str(curl, CURLOPT_FTPPORT, config->ftpport);
@@ -1519,6 +1524,14 @@ static CURLcode single_transfer(struct GlobalConfig *global,
 
         if(config->ssl_ec_curves)
           my_setopt_str(curl, CURLOPT_SSL_EC_CURVES, config->ssl_ec_curves);
+
+        if(config->ssl_sig_hash_algs)
+          my_setopt_str(curl, CURLOPT_SSL_SIG_HASH_ALGS,
+                        config->ssl_sig_hash_algs);
+
+        if(config->ssl_cert_compression)
+          my_setopt_str(curl, CURLOPT_SSL_CERT_COMPRESSION,
+                        config->ssl_cert_compression);
 
         if(curlinfo->features & CURL_VERSION_SSL) {
           /* Check if config->cert is a PKCS#11 URI and set the
@@ -2059,6 +2072,14 @@ static CURLcode single_transfer(struct GlobalConfig *global,
 
         if(config->noalpn) {
           my_setopt(curl, CURLOPT_SSL_ENABLE_ALPN, 0L);
+        }
+
+        if(config->alps) {
+          my_setopt(curl, CURLOPT_SSL_ENABLE_ALPS, 1L);
+        }
+
+        if (config->noticket) {
+          my_setopt(curl, CURLOPT_SSL_ENABLE_TICKET, 0L);
         }
 
         /* new in 7.40.0, abstract support added in 7.53.0 */

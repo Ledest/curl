@@ -2135,6 +2135,38 @@ typedef enum {
   /* Set MIME option flags. */
   CURLOPT(CURLOPT_MIME_OPTIONS, CURLOPTTYPE_LONG, 315),
 
+  /* curl-impersonate: A list of headers used by the impersonated browser.
+   * If given, merged with CURLOPT_HTTPHEADER. */
+  CURLOPT(CURLOPT_HTTPBASEHEADER, CURLOPTTYPE_SLISTPOINT, 316),
+
+  /* curl-impersonate: A list of TLS signature hash algorithms.
+   * See https://datatracker.ietf.org/doc/html/rfc5246#section-7.4.1.4.1 */
+  CURLOPT(CURLOPT_SSL_SIG_HASH_ALGS, CURLOPTTYPE_STRINGPOINT, 317),
+
+  /* curl-impersonate: Whether to enable ALPS in TLS or not.
+   * See https://datatracker.ietf.org/doc/html/draft-vvv-tls-alps.
+   * Support for ALPS is minimal and is intended only for the TLS client
+   * hello to match. */
+  CURLOPT(CURLOPT_SSL_ENABLE_ALPS, CURLOPTTYPE_LONG, 318),
+
+  /* curl-impersonate: Comma-separated list of certificate compression
+   * algorithms to use. These are published in the client hello.
+   * Supported algorithms are "zlib" and "brotli".
+   * See https://datatracker.ietf.org/doc/html/rfc8879 */
+  CURLOPT(CURLOPT_SSL_CERT_COMPRESSION, CURLOPTTYPE_STRINGPOINT, 319),
+
+  /* Enable/disable TLS session ticket extension (RFC5077) */
+  CURLOPT(CURLOPT_SSL_ENABLE_TICKET, CURLOPTTYPE_LONG, 320),
+
+  /*
+   * curl-impersonate:
+   * Set the order of the HTTP/2 pseudo headers. The value must contain
+   * the letters 'm', 'a', 's', 'p' representing the pseudo-headers
+   * ":method", ":authority", ":scheme", ":path" in the desired order of
+   * appearance in the HTTP/2 HEADERS frame.
+   */
+  CURLOPT(CURLOPT_HTTP2_PSEUDO_HEADERS_ORDER, CURLOPTTYPE_STRINGPOINT, 321),
+
   CURLOPT_LASTENTRY /* the last unused */
 } CURLoption;
 
